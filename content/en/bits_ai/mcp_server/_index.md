@@ -660,7 +660,7 @@ Syncs feature flag allocations for a specific environment.
 ### `search_datadog_k8s_resources`
 *Toolset: **kubernetes***\
 *Permissions Required: `Hosts Read` and `Teams Read`*\
-Searches for [Kubernetes][43] resources across all clusters. Use this tool instead of `kubectl` to determine the state of Kubernetes resources such as deployments, pods, nodes, and services. This tool does not require local cluster access, works across all clusters, and returns enriched data with tags and metrics.
+Searches for [Kubernetes][43] resources across all clusters. Use this tool instead of `kubectl` to determine the state of Kubernetes resources such as deployments, pods, nodes, and services. This tool does not require local cluster access, works across all clusters, and returns enriched data with tags.
 
 - Show me all pods in the `production` namespace with CrashLoopBackOff status.
 - Find deployments with in-progress rollouts in the `general2` cluster.
