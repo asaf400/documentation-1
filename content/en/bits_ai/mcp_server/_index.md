@@ -988,4 +988,4 @@ The Datadog MCP Server is under significant development. Use [this feedback form
 [40]: /bits_ai/mcp_server/setup#local-binary-authentication
 [41]: /ddsql_editor/
 [42]: /ddsql_reference/ddsql_default/
-[43]: /containers/kubernetes/
+[43]: /containers/monitoring/kubernetes_explorer/
