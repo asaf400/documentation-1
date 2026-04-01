@@ -75,6 +75,7 @@ The Datadog MCP Server supports _toolsets_, which allow you to use only the tool
 - `ddsql`: (Preview) Tools for querying Datadog data using [DDSQL][41], a SQL dialect with support for infrastructure resources, logs, metrics, RUM, spans, and other Datadog data sources
 - `error-tracking`: Tools for interacting with Datadog [Error Tracking][25]
 - `feature-flags`: Tools for managing [feature flags][29], including creating, listing, and updating flags and their environments
+- `kubernetes`: Tools for searching and describing [Kubernetes][43] resources and retrieving manifests across all clusters
 - `llmobs`: Tools for searching and analyzing [LLM Observability][30] spans and experiments
 - `product-analytics`: Tools for interacting with [Product Analytics][35] queries
 - `networks`: Tools for [Cloud Network Monitoring][31] analysis and [Network Device Monitoring][32]
@@ -656,6 +657,33 @@ Syncs feature flag allocations for a specific environment.
 
 - Sync the allocations for flag `new-checkout-flow` in production.
 
+### `search_datadog_k8s_resources`
+*Toolset: **kubernetes***\
+*Permissions Required: `Hosts Read` and `Teams Read`*\
+Searches for [Kubernetes][43] resources across all clusters. Use this tool instead of `kubectl` to determine the state of Kubernetes resources such as deployments, pods, nodes, and services. This tool does not require local cluster access, works across all clusters, and returns enriched data with tags and metrics.
+
+- Show me all pods in the `production` namespace with CrashLoopBackOff status.
+- Find deployments with in-progress rollouts in the `general2` cluster.
+- List all nodes in my cluster sorted by CPU usage.
+
+### `describe_datadog_k8s_resource`
+*Toolset: **kubernetes***\
+*Permissions Required: `Hosts Read`*\
+Gets detailed information about a specific [Kubernetes][43] resource, including metadata, tags, labels, annotations, and optionally manifest history and parent resources. Use this tool instead of `kubectl describe`. You can identify a resource by its UID from a previous search or by providing resource identifiers (cluster, namespace, and resource name).
+
+- Describe pod `my-app` in cluster `prod`, namespace `default`.
+- Get details for deployment `api-server` in namespace `default`, cluster `staging`.
+- Show me the tags and annotations for this Kubernetes resource.
+
+### `get_datadog_k8s_manifest`
+*Toolset: **kubernetes***\
+*Permissions Required: `Hosts Read`*\
+Retrieves the YAML manifest for a specific [Kubernetes][43] resource. Use this tool instead of `kubectl get -o yaml`. Supports extracting specific subtrees with JSONPath expressions and a concise mode that omits `status` and `managedFields` to reduce size.
+
+- Get the manifest for pod `my-app` in cluster `prod`, namespace `default`.
+- Show me the container ports for deployment `api-server` in namespace `default`, cluster `staging`.
+- Get the container images from the manifest of pod `my-app`.
+
 ### `analyze_cloud_network_monitoring`
 *Toolset: **networks***\
 *Permissions Required: `Network Connections Read`*\
@@ -960,3 +988,4 @@ The Datadog MCP Server is under significant development. Use [this feedback form
 [40]: /bits_ai/mcp_server/setup#local-binary-authentication
 [41]: /ddsql_editor/
 [42]: /ddsql_reference/ddsql_default/
+[43]: /containers/kubernetes/
