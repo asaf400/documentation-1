@@ -68,8 +68,8 @@ APM tracer integrations support a *Propagation Mode*, which controls the amount 
 |                                          | [System.Data.SqlClient][24] *    |           |           |    {{< X >}} **     |                     |                  |
 |                                          | [Microsoft.Data.SqlClient][32] * |           |           |    {{< X >}} **     |                     |                  |
 | **PHP**  [dd-trace-php][19] >= 0.86.0    |                                  |           |           |                     |                     |                  |
-|                                          | [pdo][20]                        | {{< X >}} | {{< X >}} |                     |                     |                  |
-|                                          | [MySQLi][21]                     |           | {{< X >}} |                     |                     |                  |
+|                                          | [pdo][20] *******                | {{< X >}} | {{< X >}} |                     |                     |                  |
+|                                          | [MySQLi][21] *******             |           | {{< X >}} |                     |                     |                  |
 | **Node.js:** [dd-trace-js][9] >= 3.17.0  |                                  |           |           |                     |                     |                  |
 |                                          | [postgres][10]                   | {{< X >}} |           |                     |                     |                  |
 |                                          | [mysql][13]                      |           | {{< X >}} |                     |                     |                  |
@@ -104,6 +104,8 @@ APM tracer integrations support a *Propagation Mode*, which controls the amount 
   - Prerequisite:
     - Java tracer 1.58.0 or greater
     - mongo-java-driver v3.8 or greater
+
+\*\*\*\*\*\*\* [mysqli::prepare][37] and [PDO::prepare][38] statements will only use service mode for propogation
 
 ## Setup
 For the best user experience, ensure the following environment variables are set in your application:
@@ -532,3 +534,5 @@ View historical performance of similar queries to those executed in your trace, 
 [34]: https://www.psycopg.org/psycopg3/
 [35]: https://pymongo.readthedocs.io/en/stable/
 [36]: https://www.mongodb.com/docs/drivers/java/sync/current/
+[37]: https://www.php.net/manual/en/mysqli.prepare.php
+[38]: https://www.php.net/manual/en/pdo.prepare.php
