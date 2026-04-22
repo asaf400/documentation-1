@@ -2821,6 +2821,10 @@
     "request_description": "",
     "request_schema_description": "A top-level wrapper for updating a notification rule for a user"
   },
+  "ListOrgs": {
+    "description": "Returns the current organization and its managed organizations in JSON:API format.",
+    "summary": "List your managed organizations"
+  },
   "ListOrgConfigs": {
     "description": "Returns all Org Configs (name, description, and value).",
     "summary": "List Org Configs"
@@ -2889,12 +2893,8 @@
     "description": "Delete an organization group policy by its ID.",
     "summary": "Delete an org group policy"
   },
-  "GetOrgGroupPolicy": {
-    "description": "Get a specific organization group policy by its ID.",
-    "summary": "Get an org group policy"
-  },
   "UpdateOrgGroupPolicy": {
-    "description": "Update an existing organization group policy.",
+    "description": "Update the content of an existing organization group policy.",
     "summary": "Update an org group policy",
     "request_description": "",
     "request_schema_description": "Request to update an org group policy."
@@ -2916,10 +2916,6 @@
   "DeleteOrgGroupPolicyOverride": {
     "description": "Delete an organization group policy override by its ID.",
     "summary": "Delete an org group policy override"
-  },
-  "GetOrgGroupPolicyOverride": {
-    "description": "Get a specific organization group policy override by its ID.",
-    "summary": "Get an org group policy override"
   },
   "UpdateOrgGroupPolicyOverride": {
     "description": "Update an existing organization group policy override.",
@@ -4876,6 +4872,10 @@
     "summary": "Update a user",
     "request_description": "",
     "request_schema_description": "Update a user."
+  },
+  "DeleteUserInvitations": {
+    "description": "Cancel all pending invitations for a specified user.\nRequires the `user_access_invite` permission.",
+    "summary": "Delete a pending user's invitations"
   },
   "ListUserOrganizations": {
     "description": "Get a user organization. Returns the user information and all organizations\njoined by this user.",
