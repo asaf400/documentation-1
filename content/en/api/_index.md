@@ -30,4 +30,9 @@ cascade:
     lang: en
   aliases:
     - /api/latest/service-scorecards
+- _target:
+    path: /api/latest/bits-ai-sre
+    lang: en
+  aliases:
+    - /api/latest/bits-ai
 ---
