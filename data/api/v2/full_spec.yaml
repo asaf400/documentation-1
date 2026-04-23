@@ -30373,7 +30373,7 @@ components:
           type: array
       type: object
     GetInvestigationResponse:
-      description: Response for a single Bits AI investigation.
+      description: Response for a single Bits AI SRE investigation.
       properties:
         data:
           $ref: "#/components/schemas/GetInvestigationResponseData"
@@ -85472,7 +85472,7 @@ paths:
           - user_access_manage
   /api/v2/bits-ai/investigations:
     get:
-      description: List all Bits AI investigations for the organization.
+      description: List all Bits AI SRE investigations for the organization.
       operationId: ListInvestigations
       parameters:
         - description: Offset for pagination.
@@ -85539,9 +85539,9 @@ paths:
           appKeyAuth: []
         - AuthZ:
             - bits_investigations_read
-      summary: List Bits AI investigations
+      summary: List Bits AI SRE investigations
       tags:
-        - Bits AI
+        - Bits AI SRE
       x-menu-order: 2
       x-pagination:
         limitParam: page[limit]
@@ -85555,7 +85555,7 @@ paths:
         **Note**: This endpoint is in preview and is subject to change.
         If you have any feedback, contact [Datadog support](https://docs.datadoghq.com/help/).
     post:
-      description: Trigger a new Bits AI investigation based on a monitor alert.
+      description: Trigger a new Bits AI SRE investigation based on a monitor alert.
       operationId: TriggerInvestigation
       requestBody:
         content:
@@ -85604,9 +85604,9 @@ paths:
           appKeyAuth: []
         - AuthZ:
             - bits_investigations_write
-      summary: Trigger a Bits AI investigation
+      summary: Trigger a Bits AI SRE investigation
       tags:
-        - Bits AI
+        - Bits AI SRE
       x-codegen-request-body-name: body
       x-menu-order: 1
       "x-permission":
@@ -85618,7 +85618,7 @@ paths:
         If you have any feedback, contact [Datadog support](https://docs.datadoghq.com/help/).
   /api/v2/bits-ai/investigations/{id}:
     get:
-      description: Get a specific Bits AI investigation by ID.
+      description: Get a specific Bits AI SRE investigation by ID.
       operationId: GetInvestigation
       parameters:
         - description: The ID of the investigation.
@@ -85669,9 +85669,9 @@ paths:
           appKeyAuth: []
         - AuthZ:
             - bits_investigations_read
-      summary: Get a Bits AI investigation
+      summary: Get a Bits AI SRE investigation
       tags:
-        - Bits AI
+        - Bits AI SRE
       x-menu-order: 3
       "x-permission":
         operator: OR
@@ -132132,8 +132132,8 @@ tags:
       sent from Identity Providers. Use these endpoints to manage your AuthN Mappings.
     name: AuthN Mappings
   - description: |-
-      Use the Bits AI endpoints to retrieve AI-powered investigations.
-    name: Bits AI
+      Use the Bits AI SRE endpoints to retrieve AI-powered investigations.
+    name: Bits AI SRE
   - description: |-
       Search or aggregate your CI Visibility pipeline events and send them to your Datadog site over HTTP. See the [CI Pipeline Visibility in Datadog page](https://docs.datadoghq.com/continuous_integration/pipelines/) for more information.
     name: CI Visibility Pipelines
