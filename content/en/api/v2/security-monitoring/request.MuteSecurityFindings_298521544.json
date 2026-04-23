@@ -1,0 +1,22 @@
+{
+  "data": {
+    "attributes": {
+      "mute": {
+        "description": "Resolved.",
+        "muted": false,
+        "reason": "NO_PENDING_FIX"
+      }
+    },
+    "relationships": {
+      "findings": {
+        "data": [
+          {
+            "id": "ZGVmLTAwcC1pZXJ-aS0wZjhjNjMyZDNmMzRlZTgzNw==",
+            "type": "findings"
+          }
+        ]
+      }
+    },
+    "type": "mute"
+  }
+}

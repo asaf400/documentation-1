@@ -45255,6 +45255,123 @@ components:
         meta:
           $ref: "#/components/schemas/MonthlyCostAttributionMeta"
       type: object
+    MuteDataType:
+      default: mute
+      description: Mute resource type.
+      enum:
+        - mute
+      example: mute
+      type: string
+      x-enum-varnames:
+        - MUTE
+    MuteFindingsMuteAttributes:
+      description: Mute properties to apply to the findings.
+      properties:
+        description:
+          description: Additional information about the reason why the findings are muted or unmuted. This field has a limit of 280 characters.
+          example: "To be resolved later."
+          type: string
+        expiration_date:
+          description: >-
+            The expiration date of the mute action (Unix ms). It must be set to a value greater than the current timestamp. If this field is not provided, the findings remain muted indefinitely.
+          example: 1778721573794
+          format: int64
+          type: integer
+        muted:
+          description: Whether the findings should be muted or unmuted.
+          example: true
+          type: boolean
+        reason:
+          $ref: "#/components/schemas/MuteFindingsReason"
+          description: The reason why the findings are muted or unmuted.
+      required:
+        - muted
+        - reason
+      type: object
+    MuteFindingsReason:
+      description: The reason why the findings are muted or unmuted.
+      enum:
+        - PENDING_FIX
+        - FALSE_POSITIVE
+        - OTHER
+        - NO_FIX
+        - DUPLICATE
+        - RISK_ACCEPTED
+        - NO_PENDING_FIX
+        - HUMAN_ERROR
+        - NO_LONGER_ACCEPTED_RISK
+      example: PENDING_FIX
+      type: string
+      x-enum-varnames:
+        - PENDING_FIX
+        - FALSE_POSITIVE
+        - OTHER
+        - NO_FIX
+        - DUPLICATE
+        - RISK_ACCEPTED
+        - NO_PENDING_FIX
+        - HUMAN_ERROR
+        - NO_LONGER_ACCEPTED_RISK
+    MuteFindingsRequest:
+      description: Request to mute or unmute security findings.
+      properties:
+        data:
+          $ref: "#/components/schemas/MuteFindingsRequestData"
+      required:
+        - data
+      type: object
+    MuteFindingsRequestData:
+      description: Data of the mute request.
+      properties:
+        attributes:
+          $ref: "#/components/schemas/MuteFindingsRequestDataAttributes"
+        id:
+          description: Unique identifier of the mute request.
+          example: "93bfeb70-af47-424d-908a-948d3f08e37f"
+          type: string
+        relationships:
+          $ref: "#/components/schemas/MuteFindingsRequestDataRelationships"
+        type:
+          $ref: "#/components/schemas/MuteDataType"
+      required:
+        - type
+      type: object
+    MuteFindingsRequestDataAttributes:
+      description: Attributes of the mute request.
+      properties:
+        mute:
+          $ref: "#/components/schemas/MuteFindingsMuteAttributes"
+      required:
+        - mute
+      type: object
+    MuteFindingsRequestDataRelationships:
+      description: Relationships of the mute request.
+      properties:
+        findings:
+          $ref: "#/components/schemas/Findings"
+          description: Security findings to mute or unmute.
+      required:
+        - findings
+      type: object
+    MuteFindingsResponse:
+      description: Response for the mute or unmute request.
+      properties:
+        data:
+          $ref: "#/components/schemas/MuteFindingsResponseData"
+      type: object
+    MuteFindingsResponseData:
+      description: Data of the mute response.
+      properties:
+        id:
+          description: Unique identifier of the mute request.
+          example: "93bfeb70-af47-424d-908a-948d3f08e37f"
+          type: string
+        type:
+          $ref: "#/components/schemas/MuteDataType"
+      required:
+        - type
+        - id
+      type: object
     NotebookCreateData:
       description: Notebook creation data
       properties:
@@ -88986,7 +89103,7 @@ paths:
       summary: Create a custom framework
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 26
+      x-menu-order: 27
       "x-permission":
         operator: AND
         permissions:
@@ -89021,7 +89138,7 @@ paths:
       summary: Delete a custom framework
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 22
+      x-menu-order: 23
       "x-permission":
         operator: AND
         permissions:
@@ -89054,7 +89171,7 @@ paths:
       summary: Get a custom framework
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 23
+      x-menu-order: 24
       "x-permission":
         operator: OR
         permissions:
@@ -89108,7 +89225,7 @@ paths:
       summary: Update a custom framework
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 21
+      x-menu-order: 22
       "x-permission":
         operator: AND
         permissions:
@@ -89142,7 +89259,7 @@ paths:
             - security_monitoring_filters_read
       summary: List resource filters
       tags: ["Security Monitoring"]
-      x-menu-order: 24
+      x-menu-order: 25
       "x-permission":
         operator: OR
         permissions:
@@ -89194,7 +89311,7 @@ paths:
       summary: Update resource filters
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 25
+      x-menu-order: 26
       "x-permission":
         operator: OR
         permissions:
@@ -118002,6 +118119,72 @@ paths:
         permissions:
           - security_monitoring_findings_write
           - appsec_vm_write
+  /api/v2/security/findings/mute:
+    patch:
+      description: >-
+        Mute or unmute security findings.
+
+        You can mute or unmute up to 100 security findings per request. The request body must include `muted` and `reason` attributes. The allowed reasons depend on whether the finding is being muted or unmuted:
+          - To mute a finding: `PENDING_FIX`, `FALSE_POSITIVE`, `OTHER`, `NO_FIX`, `DUPLICATE`, `RISK_ACCEPTED`.
+          - To unmute a finding: `NO_PENDING_FIX`, `HUMAN_ERROR`, `NO_LONGER_ACCEPTED_RISK`, `OTHER`.
+      operationId: MuteSecurityFindings
+      requestBody:
+        content:
+          application/json:
+            examples:
+              default:
+                value:
+                  data:
+                    attributes:
+                      mute:
+                        description: "To be resolved later."
+                        expiration_date: 1778721573794
+                        muted: true
+                        reason: "RISK_ACCEPTED"
+                    relationships:
+                      findings:
+                        data:
+                          - id: "ZGVmLTAwcC1pZXJ-aS0wZjhjNjMyZDNmMzRlZTgzNw=="
+                            type: "findings"
+                    type: "mute"
+            schema:
+              $ref: "#/components/schemas/MuteFindingsRequest"
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MuteFindingsResponse"
+          description: Accepted
+        "400":
+          $ref: "#/components/responses/BadRequestResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSONAPIErrorResponse"
+          description: "Unprocessable Entity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsResponse"
+      security:
+        - apiKeyAuth: []
+          appKeyAuth: []
+        - AuthZ: []
+      summary: Mute or unmute security findings
+      tags:
+        - "Security Monitoring"
+      x-codegen-request-body-name: body
+      x-menu-order: 21
+      "x-permission":
+        operator: OR
+        permissions:
+          - security_monitoring_findings_write
+          - appsec_vm_write
   /api/v2/security/findings/search:
     post:
       description: |-
@@ -118446,7 +118629,7 @@ paths:
             - security_monitoring_signals_read
       summary: List indicators of compromise
       tags: ["Security Monitoring"]
-      x-menu-order: 89
+      x-menu-order: 90
       x-unstable: |-
         **Note**: This endpoint is in beta and may be subject to changes.
         Please check the documentation regularly for updates.
@@ -118484,7 +118667,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get an indicator of compromise
       tags: ["Security Monitoring"]
-      x-menu-order: 90
+      x-menu-order: 91
       x-unstable: |-
         **Note**: This endpoint is in beta and may be subject to changes.
         Please check the documentation regularly for updates.
@@ -119736,7 +119919,7 @@ paths:
       summary: Get all critical assets
       tags:
         - Security Monitoring
-      x-menu-order: 41
+      x-menu-order: 42
     post:
       description: Create a new critical asset.
       operationId: CreateSecurityMonitoringCriticalAsset
@@ -119784,7 +119967,7 @@ paths:
       tags:
         - Security Monitoring
       x-codegen-request-body-name: body
-      x-menu-order: 42
+      x-menu-order: 43
   /api/v2/security_monitoring/configuration/critical_assets/rules/{rule_id}:
     get:
       description: Get the list of critical assets that affect a specific existing rule by the rule's ID.
@@ -119812,7 +119995,7 @@ paths:
       summary: Get critical assets affecting a specific rule
       tags:
         - Security Monitoring
-      x-menu-order: 46
+      x-menu-order: 47
   /api/v2/security_monitoring/configuration/critical_assets/{critical_asset_id}:
     delete:
       description: Delete a specific critical asset.
@@ -119836,7 +120019,7 @@ paths:
       summary: Delete a critical asset
       tags:
         - Security Monitoring
-      x-menu-order: 45
+      x-menu-order: 46
     get:
       description: Get the details of a specific critical asset.
       operationId: GetSecurityMonitoringCriticalAsset
@@ -119863,7 +120046,7 @@ paths:
       summary: Get a critical asset
       tags:
         - Security Monitoring
-      x-menu-order: 43
+      x-menu-order: 44
     patch:
       description: Update a specific critical asset.
       operationId: UpdateSecurityMonitoringCriticalAsset
@@ -119915,7 +120098,7 @@ paths:
       summary: Update a critical asset
       tags:
         - Security Monitoring
-      x-menu-order: 44
+      x-menu-order: 45
   /api/v2/security_monitoring/configuration/security_filters:
     get:
       description: Get the list of configured security filters with their definitions.
@@ -119938,7 +120121,7 @@ paths:
             - security_monitoring_filters_read
       summary: Get all security filters
       tags: ["Security Monitoring"]
-      x-menu-order: 27
+      x-menu-order: 28
       "x-permission":
         operator: OR
         permissions:
@@ -119993,7 +120176,7 @@ paths:
       summary: Create a security filter
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 28
+      x-menu-order: 29
       "x-permission":
         operator: OR
         permissions:
@@ -120020,7 +120203,7 @@ paths:
             - security_monitoring_filters_write
       summary: Delete a security filter
       tags: ["Security Monitoring"]
-      x-menu-order: 31
+      x-menu-order: 32
       "x-permission":
         operator: OR
         permissions:
@@ -120054,7 +120237,7 @@ paths:
             - security_monitoring_filters_read
       summary: Get a security filter
       tags: ["Security Monitoring"]
-      x-menu-order: 29
+      x-menu-order: 30
       "x-permission":
         operator: OR
         permissions:
@@ -120110,7 +120293,7 @@ paths:
       summary: Update a security filter
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 30
+      x-menu-order: 31
       "x-permission":
         operator: OR
         permissions:
@@ -120161,7 +120344,7 @@ paths:
       summary: Get all suppression rules
       tags:
         - Security Monitoring
-      x-menu-order: 32
+      x-menu-order: 33
     post:
       description: Create a new suppression rule.
       operationId: CreateSecurityMonitoringSuppression
@@ -120213,7 +120396,7 @@ paths:
       tags:
         - Security Monitoring
       x-codegen-request-body-name: body
-      x-menu-order: 33
+      x-menu-order: 34
   /api/v2/security_monitoring/configuration/suppressions/rules:
     post:
       description: Get the list of suppressions that would affect a rule.
@@ -120294,7 +120477,7 @@ paths:
       summary: Get suppressions affecting future rule
       tags:
         - Security Monitoring
-      x-menu-order: 38
+      x-menu-order: 39
   /api/v2/security_monitoring/configuration/suppressions/rules/{rule_id}:
     get:
       description: Get the list of suppressions that affect a specific existing rule by its ID.
@@ -120322,7 +120505,7 @@ paths:
       summary: Get suppressions affecting a specific rule
       tags:
         - Security Monitoring
-      x-menu-order: 39
+      x-menu-order: 40
   /api/v2/security_monitoring/configuration/suppressions/validation:
     post:
       description: Validate a suppression rule.
@@ -120367,7 +120550,7 @@ paths:
       summary: Validate a suppression rule
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 37
+      x-menu-order: 38
       "x-permission":
         operator: OR
         permissions:
@@ -120395,7 +120578,7 @@ paths:
       summary: Delete a suppression rule
       tags:
         - Security Monitoring
-      x-menu-order: 36
+      x-menu-order: 37
     get:
       description: Get the details of a specific suppression rule.
       operationId: GetSecurityMonitoringSuppression
@@ -120422,7 +120605,7 @@ paths:
       summary: Get a suppression rule
       tags:
         - Security Monitoring
-      x-menu-order: 34
+      x-menu-order: 35
     patch:
       description: Update a specific suppression rule.
       operationId: UpdateSecurityMonitoringSuppression
@@ -120477,7 +120660,7 @@ paths:
       summary: Update a suppression rule
       tags:
         - Security Monitoring
-      x-menu-order: 35
+      x-menu-order: 36
   /api/v2/security_monitoring/configuration/suppressions/{suppression_id}/version_history:
     get:
       description: Get a suppression's version history.
@@ -120507,7 +120690,7 @@ paths:
       summary: Get a suppression's version history
       tags:
         - Security Monitoring
-      x-menu-order: 40
+      x-menu-order: 41
   /api/v2/security_monitoring/content_packs/states:
     get:
       description: |-
@@ -120543,7 +120726,7 @@ paths:
       summary: Get content pack states
       tags:
         - Security Monitoring
-      x-menu-order: 47
+      x-menu-order: 48
       "x-permission":
         operator: OR
         permissions:
@@ -120592,7 +120775,7 @@ paths:
       summary: Activate content pack
       tags:
         - Security Monitoring
-      x-menu-order: 48
+      x-menu-order: 49
       "x-permission":
         operator: OR
         permissions:
@@ -120640,7 +120823,7 @@ paths:
       summary: Deactivate content pack
       tags:
         - Security Monitoring
-      x-menu-order: 49
+      x-menu-order: 50
       "x-permission":
         operator: OR
         permissions:
@@ -120687,7 +120870,7 @@ paths:
             - security_monitoring_rules_read
       summary: List rules
       tags: ["Security Monitoring"]
-      x-menu-order: 50
+      x-menu-order: 51
       "x-permission":
         operator: OR
         permissions:
@@ -120753,7 +120936,7 @@ paths:
       summary: Create a detection rule
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 51
+      x-menu-order: 52
       "x-permission":
         operator: OR
         permissions:
@@ -120805,7 +120988,7 @@ paths:
       summary: Bulk export security monitoring rules
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 60
+      x-menu-order: 61
       "x-permission":
         operator: OR
         permissions:
@@ -120911,7 +121094,7 @@ paths:
       summary: Convert a rule from JSON to Terraform
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 59
+      x-menu-order: 60
       "x-permission":
         operator: OR
         permissions:
@@ -121017,7 +121200,7 @@ paths:
       summary: Test a rule
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 56
+      x-menu-order: 57
       "x-permission":
         operator: OR
         permissions:
@@ -121111,7 +121294,7 @@ paths:
       summary: Validate a detection rule
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 57
+      x-menu-order: 58
       "x-permission":
         operator: OR
         permissions:
@@ -121139,7 +121322,7 @@ paths:
             - security_monitoring_rules_write
       summary: Delete an existing rule
       tags: ["Security Monitoring"]
-      x-menu-order: 54
+      x-menu-order: 55
       "x-permission":
         operator: OR
         permissions:
@@ -121167,7 +121350,7 @@ paths:
             - security_monitoring_rules_read
       summary: Get a rule's details
       tags: ["Security Monitoring"]
-      x-menu-order: 52
+      x-menu-order: 53
       "x-permission":
         operator: OR
         permissions:
@@ -121235,7 +121418,7 @@ paths:
       summary: Update an existing rule
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 53
+      x-menu-order: 54
       "x-permission":
         operator: OR
         permissions:
@@ -121275,7 +121458,7 @@ paths:
             - security_monitoring_rules_read
       summary: Convert an existing rule from JSON to Terraform
       tags: ["Security Monitoring"]
-      x-menu-order: 58
+      x-menu-order: 59
       "x-permission":
         operator: OR
         permissions:
@@ -121359,7 +121542,7 @@ paths:
       summary: Test an existing rule
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 55
+      x-menu-order: 56
       "x-permission":
         operator: OR
         permissions:
@@ -121389,7 +121572,7 @@ paths:
           $ref: "#/components/responses/TooManyRequestsResponse"
       summary: Get a rule's version history
       tags: ["Security Monitoring"]
-      x-menu-order: 61
+      x-menu-order: 62
       "x-permission":
         operator: OR
         permissions:
@@ -121430,7 +121613,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get a quick list of security signals
       tags: ["Security Monitoring"]
-      x-menu-order: 73
+      x-menu-order: 74
       x-pagination:
         cursorParam: page[cursor]
         cursorPath: meta.page.after
@@ -121485,7 +121668,7 @@ paths:
       summary: Bulk update triage assignee of security signals
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 86
+      x-menu-order: 87
       "x-permission":
         operator: OR
         permissions:
@@ -121536,7 +121719,7 @@ paths:
       summary: Bulk update triage state of security signals
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 85
+      x-menu-order: 86
       "x-permission":
         operator: OR
         permissions:
@@ -121591,7 +121774,7 @@ paths:
       summary: Bulk update security signals
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 95
+      x-menu-order: 96
       "x-permission":
         operator: OR
         permissions:
@@ -121641,7 +121824,7 @@ paths:
       summary: Get a list of security signals
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 72
+      x-menu-order: 73
       x-pagination:
         cursorParam: body.page.cursor
         cursorPath: meta.page.after
@@ -121677,7 +121860,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get a signal's details
       tags: ["Security Monitoring"]
-      x-menu-order: 74
+      x-menu-order: 75
       "x-permission":
         operator: OR
         permissions:
@@ -121725,7 +121908,7 @@ paths:
       summary: Modify the triage assignee of a security signal
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 77
+      x-menu-order: 85
       "x-permission":
         operator: OR
         permissions:
@@ -121773,7 +121956,7 @@ paths:
       summary: Change the related incidents of a security signal
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 76
+      x-menu-order: 77
       "x-permission":
         operator: OR
         permissions:
@@ -121821,7 +122004,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get investigation queries for a signal
       tags: ["Security Monitoring"]
-      x-menu-order: 87
+      x-menu-order: 88
       x-permission:
         operator: AND
         permissions:
@@ -121871,7 +122054,7 @@ paths:
       summary: Change the triage state of a security signal
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 75
+      x-menu-order: 76
       "x-permission":
         operator: OR
         permissions:
@@ -121919,7 +122102,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get suggested actions for a signal
       tags: ["Security Monitoring"]
-      x-menu-order: 88
+      x-menu-order: 89
       x-permission:
         operator: AND
         permissions:
@@ -121981,7 +122164,7 @@ paths:
       summary: Update security signal triage state or assignee
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 94
+      x-menu-order: 95
       "x-permission":
         operator: OR
         permissions:
@@ -122038,7 +122221,7 @@ paths:
       tags:
         - Security Monitoring
       x-codegen-request-body-name: body
-      x-menu-order: 92
+      x-menu-order: 93
       "x-permission":
         operator: OR
         permissions:
@@ -122097,7 +122280,7 @@ paths:
       tags:
         - Security Monitoring
       x-codegen-request-body-name: body
-      x-menu-order: 93
+      x-menu-order: 94
       "x-permission":
         operator: OR
         permissions:
@@ -122137,7 +122320,7 @@ paths:
       summary: Export security monitoring resource to Terraform
       tags:
         - Security Monitoring
-      x-menu-order: 91
+      x-menu-order: 92
       "x-permission":
         operator: OR
         permissions:
@@ -123716,7 +123899,7 @@ paths:
             - security_monitoring_signals_read
       summary: List hist signals
       tags: ["Security Monitoring"]
-      x-menu-order: 69
+      x-menu-order: 70
       "x-permission":
         operator: OR
         permissions:
@@ -123766,7 +123949,7 @@ paths:
             - security_monitoring_signals_read
       summary: Search hist signals
       tags: ["Security Monitoring"]
-      x-menu-order: 71
+      x-menu-order: 72
       "x-permission":
         operator: OR
         permissions:
@@ -123802,7 +123985,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get a hist signal's details
       tags: ["Security Monitoring"]
-      x-menu-order: 70
+      x-menu-order: 71
       "x-permission":
         operator: OR
         permissions:
@@ -123850,7 +124033,7 @@ paths:
         - AuthZ: []
       summary: List historical jobs
       tags: ["Security Monitoring"]
-      x-menu-order: 63
+      x-menu-order: 64
       x-unstable: |-
         **Note**: This endpoint is in beta and may be subject to changes.
         Please check the documentation regularly for updates.
@@ -123917,7 +124100,7 @@ paths:
       summary: Run a historical job
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 62
+      x-menu-order: 63
       "x-permission":
         operator: OR
         permissions:
@@ -123964,7 +124147,7 @@ paths:
       summary: Convert a job result to a signal
       tags: ["Security Monitoring"]
       x-codegen-request-body-name: body
-      x-menu-order: 67
+      x-menu-order: 68
       "x-permission":
         operator: OR
         permissions:
@@ -124000,7 +124183,7 @@ paths:
         - AuthZ: []
       summary: Delete an existing job
       tags: ["Security Monitoring"]
-      x-menu-order: 65
+      x-menu-order: 66
       x-unstable: |-
         **Note**: This endpoint is in beta and may be subject to changes.
         Please check the documentation regularly for updates.
@@ -124031,7 +124214,7 @@ paths:
             - security_monitoring_rules_read
       summary: Get a job's details
       tags: ["Security Monitoring"]
-      x-menu-order: 64
+      x-menu-order: 65
       "x-permission":
         operator: OR
         permissions:
@@ -124067,7 +124250,7 @@ paths:
             - security_monitoring_rules_write
       summary: Cancel a historical job
       tags: ["Security Monitoring"]
-      x-menu-order: 66
+      x-menu-order: 67
       "x-permission":
         operator: OR
         permissions:
@@ -124109,7 +124292,7 @@ paths:
             - security_monitoring_signals_read
       summary: Get a job's hist signals
       tags: ["Security Monitoring"]
-      x-menu-order: 68
+      x-menu-order: 69
       "x-permission":
         operator: OR
         permissions:
