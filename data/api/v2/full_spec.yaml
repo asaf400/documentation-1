@@ -7717,6 +7717,10 @@ components:
     AwsScanOptionsAttributes:
       description: Attributes for the AWS scan options.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          example: false
+          type: boolean
         lambda:
           description: Indicates if scanning of Lambda functions is enabled.
           example: true
@@ -7737,6 +7741,10 @@ components:
     AwsScanOptionsCreateAttributes:
       description: Attributes for the AWS scan options to create.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          example: false
+          type: boolean
         lambda:
           description: Indicates if scanning of Lambda functions is enabled.
           example: true
@@ -7754,6 +7762,7 @@ components:
           example: true
           type: boolean
       required:
+        - compliance_host
         - lambda
         - sensitive_data
         - vuln_containers_os
@@ -7819,6 +7828,10 @@ components:
     AwsScanOptionsUpdateAttributes:
       description: Attributes for the AWS scan options to update.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          example: false
+          type: boolean
         lambda:
           description: Indicates if scanning of Lambda functions is enabled.
           example: true
@@ -7900,6 +7913,7 @@ components:
       example:
         data:
           attributes:
+            compliance_host: false
             vuln_containers_os: true
             vuln_host_os: true
           id: 12345678-90ab-cdef-1234-567890abcdef
@@ -7913,6 +7927,7 @@ components:
       example:
         data:
           - attributes:
+              compliance_host: false
               vuln_containers_os: true
               vuln_host_os: true
             id: 12345678-90ab-cdef-1234-567890abcdef
@@ -7944,6 +7959,9 @@ components:
     AzureScanOptionsDataAttributes:
       description: Attributes for Azure scan options configuration.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          type: boolean
         vuln_containers_os:
           description: Indicates if scanning for vulnerabilities in containers is enabled.
           type: boolean
@@ -7988,6 +8006,9 @@ components:
     AzureScanOptionsInputUpdateDataAttributes:
       description: Attributes for updating Azure scan options configuration.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          type: boolean
         vuln_containers_os:
           description: Indicates if scanning for vulnerabilities in containers is enabled.
           type: boolean
@@ -29896,6 +29917,7 @@ components:
       example:
         data:
           attributes:
+            compliance_host: false
             vuln_containers_os: true
             vuln_host_os: true
           id: company-project-id
@@ -29909,6 +29931,7 @@ components:
       example:
         data:
           - attributes:
+              compliance_host: false
               vuln_containers_os: true
               vuln_host_os: true
             id: company-project-id
@@ -29940,6 +29963,9 @@ components:
     GcpScanOptionsDataAttributes:
       description: Attributes for GCP scan options configuration.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          type: boolean
         vuln_containers_os:
           description: Indicates if scanning for vulnerabilities in containers is enabled.
           type: boolean
@@ -29984,6 +30010,9 @@ components:
     GcpScanOptionsInputUpdateDataAttributes:
       description: Attributes for updating GCP scan options configuration.
       properties:
+        compliance_host:
+          description: Indicates if scanning for host compliance is enabled.
+          type: boolean
         vuln_containers_os:
           description: Indicates if scanning for vulnerabilities in containers is enabled.
           type: boolean
@@ -84822,6 +84851,7 @@ paths:
                 value:
                   data:
                     attributes:
+                      compliance_host: false
                       lambda: true
                       sensitive_data: false
                       vuln_containers_os: true
@@ -84922,6 +84952,7 @@ paths:
                 value:
                   data:
                     attributes:
+                      compliance_host: false
                       lambda: true
                       sensitive_data: false
                       vuln_containers_os: true
@@ -84985,6 +85016,7 @@ paths:
                 value:
                   data:
                     attributes:
+                      compliance_host: false
                       vuln_containers_os: true
                       vuln_host_os: true
                     id: 12345678-90ab-cdef-1234-567890abcdef
@@ -85148,6 +85180,7 @@ paths:
                 value:
                   data:
                     attributes:
+                      compliance_host: false
                       vuln_containers_os: true
                       vuln_host_os: true
                     id: company-project-id
