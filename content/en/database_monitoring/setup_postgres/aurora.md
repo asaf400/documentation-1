@@ -212,6 +212,7 @@ To configure collecting Database Monitoring metrics for an Agent running on a ho
    instances:
      - dbm: true
        host: '<AWS_INSTANCE_ENDPOINT>'
+       ssl: allow
        port: 5432
        username: datadog
        password: 'ENC[datadog_user_database_password]'
@@ -253,6 +254,7 @@ docker run -e "DD_API_KEY=${DD_API_KEY}" \
     "instances": [{
       "dbm": true,
       "host": "<AWS_INSTANCE_ENDPOINT>",
+      "ssl": "allow",
       "port": 5432,
       "username": "datadog",
       "password": "<UNIQUEPASSWORD>",
@@ -282,7 +284,7 @@ FROM registry.datadoghq.com/agent:<AGENT_VERSION>
 
 LABEL "com.datadoghq.ad.check_names"='["postgres"]'
 LABEL "com.datadoghq.ad.init_configs"='[{}]'
-LABEL "com.datadoghq.ad.instances"='[{"dbm": true, "host": "<AWS_INSTANCE_ENDPOINT>", "port": 5432,"username": "datadog","password": "ENC[datadog_user_database_password]","aws": {"instance_endpoint": "<AWS_INSTANCE_ENDPOINT>", "region": "<REGION>"}, "tags": ["dbinstanceidentifier:<DB_INSTANCE_NAME>"]}]'
+LABEL "com.datadoghq.ad.instances"='[{"dbm": true, "host": "<AWS_INSTANCE_ENDPOINT>", "ssl": "allow", "port": 5432,"username": "datadog","password": "ENC[datadog_user_database_password]","aws": {"instance_endpoint": "<AWS_INSTANCE_ENDPOINT>", "region": "<REGION>"}, "tags": ["dbinstanceidentifier:<DB_INSTANCE_NAME>"]}]'
 ```
 
 For Postgres 9.6, add the following settings to the instance config where host and port are specified:
@@ -347,6 +349,7 @@ Using the [Operator instructions in Kubernetes and Integrations][3] as a referen
                 init_config:
                 instances:
                 - host: <AWS_INSTANCE_ENDPOINT>
+                  ssl: allow
                   port: 5432
                   username: datadog
                   password: 'ENC[datadog_user_database_password]'
@@ -394,6 +397,7 @@ Using the [Helm instructions in Kubernetes and Integrations][4] as a reference, 
           instances:
           - dbm: true
             host: <AWS_INSTANCE_ENDPOINT>
+            ssl: allow
             port: 5432
             username: datadog
             password: 'ENC[datadog_user_database_password]'
@@ -431,6 +435,7 @@ init_config:
 instances:
   - dbm: true
     host: '<AWS_INSTANCE_ENDPOINT>'
+    ssl: allow
     port: 5432
     username: datadog
     password: 'ENC[datadog_user_database_password]'
@@ -465,6 +470,7 @@ metadata:
             {
               "dbm": true,
               "host": "<AWS_INSTANCE_ENDPOINT>",
+              "ssl": "allow"
               "port": 5432,
               "username": "datadog",
               "password": "ENC[datadog_user_database_password]",
